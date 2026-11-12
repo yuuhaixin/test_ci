@@ -1,4 +1,4 @@
-name: Build Check
+name: Build and Run
 
 on:
   pull_request:
@@ -10,10 +10,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: checkout job
+      - name: checkout
         uses: actions/checkout@v4
 
-      - name: build job
+      - name: build
         run: |
           chmod +x ./build.sh
           ./build.sh
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: main
+          path: ./
+
+  run:
+    name: run
+    needs: build          # 等 build 成功后再跑
+    runs-on: ubuntu-latest
+    steps:
+      - name: download
+        uses: actions/download-artifact@v4
+        with:
+          name: main
+          path: ./dist
+
+      - name: run
+        run: |
+          chmod +x ./dist/main
+          ./dist/main
