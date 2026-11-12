@@ -1,0 +1,19 @@
+name: Build Check
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout job
+        uses: actions/checkout@v4
+
+      - name: build job
+        run: |
+          chmod +x ./build.sh
+          ./build.sh
